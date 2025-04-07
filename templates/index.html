@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>AI Resume Analyzer</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label>Upload Resume (PDF only):</label>
+        <input type="file" name="resume" required>
+        <br><br>
+        <label>Paste Job Description:</label>
+        <textarea name="job_description" rows="4" cols="50" required></textarea>
+        <br><br>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if analysis %}
+        <h2>Analysis Result:</h2>
+        <p><strong>Total Words in Resume:</strong> {{ analysis.total_words }}</p>
+        <p><strong>Extracted Skills:</strong> {{ analysis.top_skills}}</p>
+        <p><strong>Match Percentage:</strong> {{ analysis.match_percentage }}% Match</p>
+        <p><strong>Missing Keywords:</strong> {{ analysis.missing_keywords }}</p>
+        <p><strong>Bullet Alignment Feedback:</strong> {{ analysis.bullet_feedback }}</p>
+        <p><strong>Font Size Feedback:</strong> {{ analysis.font_feedback }}</p>
+    
+
+        <h3>Bullet Points Found:</h3>
+        <ul>
+            {% for bullet in analysis.bullet_points %}
+                <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+    
+        <h3>Link Validation:</h3>
+        <ul>
+            {% for link, status in analysis.link_statuses.items() %}
+                <li>{{ link }} - <strong>{{ status }}</strong></li>
+            {% endfor %}
+        </ul>
+
+        <!--<form action="/feedback" method="post">
+            <!-- Ensure you are passing any necessary variables -->
+           <!-- <input type="hidden" name="job_desc" value="{{ job_desc }}">
+            <button type="submit" style="display:block;" >Want to Improve?</button> 
+        </form> -->
+
+    {% endif %}
+</body>
+</html>
